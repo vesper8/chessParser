@@ -138,6 +138,30 @@ class PgnGameParser{
         $gameData = $tokens[1];
         $gameData = str_replace("\n", " ", $gameData);
         $gameData = preg_replace("/(\s+)/", " ", $gameData);
+
+        $gameData = $this->fixPgnInlineComments($gameData);
+
         return trim($gameData);
+    }
+
+    /**
+     * https://stackoverflow.com/questions/22487483/regular-expression-to-add-curly-brackets-around-the-comments-in-a-pgn-chess
+     */
+    private function fixPgnInlineComments($str) {
+        $re = '/((?:\s?[\(\)]?\s?[\(\)]?\s?[0-9]{1,3}\.{1,3}\s[NBRQK]?[a-h1-8]?x?[a-hO][1-8-][O-]{0,3}[!?+#=]{0,2}[NBRQ]?[!?+#]{0,2}(?:\s[NBRQK]?[a-h1-8]?x?[a-hO][1-8-][O-]{0,3}[!?+#=]{0,2}[NBRQ]?[!?+#]{0,2})?\s?[()]?\s?[()]?\s?)+)|((?:(?!\s?[\(\)]?\s?[\(\)]?\s?[0-9]{1,3}\.{1,3}\s[NBRQK]?[a-h1-8]?x?[a-hO][1-8-][O-]{0,3}[!?+#=]{0,2}[NBRQ]?[!?+#]{0,2}).)+)/';
+
+        preg_match_all($re, $str, $matches, PREG_SET_ORDER, 0);
+
+        $reconstructedPgn = '';
+
+        foreach ($matches as $match) {
+            if (count($match) === 3) {
+                $reconstructedPgn .= '{' . $match[0] . '}';
+            } else {
+                $reconstructedPgn .= $match[0];
+            }
+        }
+
+        return $reconstructedPgn;
     }
 }
