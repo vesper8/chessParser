@@ -154,6 +154,10 @@ class PgnGameParser{
 
         $reconstructedPgn = '';
 
+        if (count($matches) === 1) {
+            return $matches[0][0];
+        }
+
         foreach ($matches as $match) {
             if (count($match) === 3) {
                 $reconstructedPgn .= '{' . $match[0] . '}';
