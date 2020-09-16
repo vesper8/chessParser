@@ -126,6 +126,11 @@ class PgnParser
         return $this->_fullParsing;
     }
 
+    public function setFullParsing($fullParsing)
+    {
+        $this->_fullParsing = $fullParsing;
+    }
+
     public function getUnparsedGames()
     {
         if (!isset($this->pgnGames)) {
