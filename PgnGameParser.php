@@ -131,10 +131,17 @@ class PgnGameParser{
     }
 
     private function getMoveString() {
-        $tokens = preg_split("/\]\n(\s+)\n/s", $this->pgnGame);
-        if(count($tokens) < 2){
-            return "";
+        $tokens = preg_split("/\]\n\n/s", $this->pgnGame);
+        
+        // try again, this time making an allowance for extra whitespace (chess.com)
+        if (count($tokens) < 2) {
+            $tokens = preg_split("/\]\n(\s+)\n/s", $this->pgnGame);
         }
+
+        if (count($tokens) < 2) {
+            return '';
+        }
+
         $gameData = $tokens[1];
         $gameData = str_replace("\n", " ", $gameData);
         $gameData = preg_replace("/(\s+)/", " ", $gameData);
