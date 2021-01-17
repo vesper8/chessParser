@@ -25,7 +25,7 @@ class PgnParser
         $this->pgnGameParser = new PgnGameParser();
     }
 
-    private function sanitize($filePath)
+    public function sanitize($filePath)
     {
         $extension = $this->getExtension($filePath);
         if ($extension != 'pgn') return null;
@@ -49,7 +49,7 @@ class PgnParser
 
     }
 
-    private function getExtension($filePath)
+    public function getExtension($filePath)
     {
         $tokens = explode(".", $filePath);
         return strtolower(array_pop($tokens));
@@ -61,7 +61,7 @@ class PgnParser
         $this->pgnContent = $content;
     }
 
-    private function cleanPgn()
+    public function cleanPgn()
     {
         $c = $this->pgnContent;
 
@@ -93,12 +93,12 @@ class PgnParser
         return self::getPgnGamesAsArray($pgn);
     }
 
-    private function splitPgnIntoGames($pgnString)
+    public function splitPgnIntoGames($pgnString)
     {
         return $this->getPgnGamesAsArray($pgnString);
     }
 
-    private function getPgnGamesAsArray($pgn)
+    public function getPgnGamesAsArray($pgn)
     {
         $ret = array();
         $content = "\n\n" . $pgn;
@@ -121,7 +121,7 @@ class PgnParser
         return json_encode($this->getGames());
     }
 
-    private function fullParsing()
+    public function fullParsing()
     {
         return $this->_fullParsing;
     }
@@ -192,7 +192,7 @@ class PgnParser
         return $this->getParsedGames(true);
     }
 
-    private function getParsedGames($short = false)
+    public function getParsedGames($short = false)
     {
         $games = $this->getUnparsedGames();
         $ret = array();
@@ -209,7 +209,7 @@ class PgnParser
     }
 
 
-    private function toShortVersion($branch)
+    public function toShortVersion($branch)
     {
         foreach ($branch as &$move) {
 
@@ -232,7 +232,7 @@ class PgnParser
     }
 
 
-    private function getParsedGame($unParsedGame)
+    public function getParsedGame($unParsedGame)
     {
         $this->pgnGameParser->setPgn($unParsedGame);
         $ret = $this->pgnGameParser->getParsedData();
@@ -242,7 +242,7 @@ class PgnParser
         return $ret;
     }
 
-    private function getParsedGameShort($unParsedGame)
+    public function getParsedGameShort($unParsedGame)
     {
         $this->pgnGameParser->setPgn($unParsedGame);
         $ret = $this->pgnGameParser->getParsedData();
