@@ -32,7 +32,7 @@ class PgnGameParser{
         return $this->gameData;
     }
 
-    private function getMetadata(){
+    public function getMetadata(){
         $ret = array(
             CHESS_JSON::GAME_METADATA=>array()
         );
@@ -56,7 +56,7 @@ class PgnGameParser{
         return $ret;
     }
 
-    private function getMetadataKeyAndValue($metadataString){
+    public function getMetadataKeyAndValue($metadataString){
         $metadataString = preg_replace("/[\[\]]/s", "", $metadataString);
         $metadataString = str_replace('"', '', $metadataString);
         $tokens = explode(" ", $metadataString);
@@ -67,12 +67,12 @@ class PgnGameParser{
         return $ret;
     }
 
-    private function getValidKey($key){
+    public function getValidKey($key){
         $key = strtolower($key);
         return $key;
     }
 
-    private function getMoves(){
+    public function getMoves(){
         $parts = $this->getMovesAndComments();
         for($i=0, $count = count($parts); $i<$count; $i++){
             $move = trim($parts[$i]);
@@ -107,11 +107,11 @@ class PgnGameParser{
         return $this->moveBuilder->getMoves();
     }
 
-    private function addGameComment($comment){
+    public function addGameComment($comment){
         $this->gameData[CHESS_JSON::GAME_METADATA][CHESS_JSON::MOVE_COMMENT] = $comment;
     }
 
-    private function getMovesAndComments(){
+    public function getMovesAndComments(){
         $ret = preg_split("/({|})/s", $this->getMoveString(), 0, PREG_SPLIT_DELIM_CAPTURE);
         if(!$ret[0]){
             $ret = array_slice($ret, 1);
@@ -119,7 +119,7 @@ class PgnGameParser{
         return $ret;
     }
 
-    private function getMovesAndVariationFromString($string){
+    public function getMovesAndVariationFromString($string){
         $string = " ". $string;
 
         $string = preg_replace("/[0-9]+?\./s", "", $string);
@@ -130,7 +130,7 @@ class PgnGameParser{
         return preg_split("/(\(|\))/s", $string, 0, PREG_SPLIT_DELIM_CAPTURE);
     }
 
-    private function getMoveString() {
+    public function getMoveString() {
         $tokens = preg_split("/\]\n\n/s", $this->pgnGame);
         
         // try again, this time making an allowance for extra whitespace (chess.com)
@@ -154,7 +154,7 @@ class PgnGameParser{
     /**
      * https://stackoverflow.com/questions/22487483/regular-expression-to-add-curly-brackets-around-the-comments-in-a-pgn-chess
      */
-    private function fixPgnInlineComments($str) {
+    public function fixPgnInlineComments($str) {
         $re = '/((?:\s?[\(\)]?\s?[\(\)]?\s?[0-9]{1,3}\.{1,3}\s[NBRQK]?[a-h1-8]?x?[a-hO][1-8-][O-]{0,3}[!?+#=]{0,2}[NBRQ]?[!?+#]{0,2}(?:\s[NBRQK]?[a-h1-8]?x?[a-hO][1-8-][O-]{0,3}[!?+#=]{0,2}[NBRQ]?[!?+#]{0,2})?\s?[()]?\s?[()]?\s?)+)|((?:(?!\s?[\(\)]?\s?[\(\)]?\s?[0-9]{1,3}\.{1,3}\s[NBRQK]?[a-h1-8]?x?[a-hO][1-8-][O-]{0,3}[!?+#=]{0,2}[NBRQ]?[!?+#]{0,2}).)+)/';
 
         preg_match_all($re, $str, $matches, PREG_SET_ORDER, 0);
